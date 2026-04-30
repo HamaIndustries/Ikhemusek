@@ -3,8 +3,7 @@
   "package": "symbolics.division.ikhemusek.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "EntityMixin",
-    "ExampleMixin"
+    "EntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
