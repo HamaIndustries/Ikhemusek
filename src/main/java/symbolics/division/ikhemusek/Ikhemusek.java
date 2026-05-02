@@ -2,6 +2,7 @@ package symbolics.division.ikhemusek;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -47,7 +48,7 @@ public class Ikhemusek extends Item implements ModInitializer, ProjectileDeflect
 	public static final AttachmentType<Integer> PARRY_FRAMES = AttachmentRegistry.createDefaulted(id("parry_frames"), () -> 0);
 	public static Ikhemusek IT;
 
-	public static boolean PERFECT(Entity entity) {
+	public static boolean PERFECT(AttachmentTarget entity) {
 		return entity.getAttachedOrCreate(PARRY_FRAMES) > 0;
 	}
 
