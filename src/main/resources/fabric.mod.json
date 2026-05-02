@@ -3,7 +3,7 @@
   "id": "ikhemusek",
   "version": "${version}",
   "name": "Ikhemusek",
-  "description": "Parry Everything",
+  "description": "Sangfroid: All Must Be Parried",
   "authors": [
     "hama",
     "SkyNotTheLimit",
@@ -11,7 +11,7 @@
   ],
   "contact": {
   },
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "assets/ikhemusek/icon.png",
   "environment": "*",
   "entrypoints": {
