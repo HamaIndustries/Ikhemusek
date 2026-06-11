@@ -39,6 +39,7 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("NullableProblems")
 public class Ikhemusek extends Item implements ModInitializer, ProjectileDeflection, ServerTickEvents.StartLevelTick, ServerLivingEntityEvents.AllowDamage {
 	public static final String MOD_ID = "ikhemusek";
 
@@ -52,7 +53,7 @@ public class Ikhemusek extends Item implements ModInitializer, ProjectileDeflect
 		return entity.getAttachedOrCreate(PARRY_FRAMES) > 0;
 	}
 
-	public static final Identifier id(String name) {
+	public static Identifier id(String name) {
 		return Identifier.fromNamespaceAndPath(MOD_ID, name);
 	}
 
@@ -72,7 +73,7 @@ public class Ikhemusek extends Item implements ModInitializer, ProjectileDeflect
 
 	@Override
 	public boolean releaseUsing(ItemStack itemStack, Level lev, LivingEntity entity, int remainingTime) {
-		if (lev instanceof ServerLevel level) {
+		if (lev instanceof ServerLevel) {
 			entity.setAttached(PARRY_FRAMES, 8);
 			itemStack.set(DataComponents.USE_COOLDOWN, new UseCooldown(2));
 			var hit = entity.getAttackRangeWith(itemStack).getClosesetHit(entity, 0, e -> e instanceof LivingEntity living && entity.canAttack(living));
@@ -128,21 +129,20 @@ public class Ikhemusek extends Item implements ModInitializer, ProjectileDeflect
 	// sek? I hardly ikhemu
 	@Override
 	public boolean allowDamage(LivingEntity entity, DamageSource source, float amount) {
-		if (entity instanceof ServerPlayer player && PERFECT(player)) {
-			var item = player.getMainHandItem();
-			if (item.is(this)
-					&& source.getDirectEntity() instanceof LivingEntity attacker
-					&& entity.getAttackRangeWith(item).getClosesetHit(entity, 0, e -> e == attacker)
-					instanceof EntityHitResult ehr
-			) {
-				Vec3 d = player.getEyePosition().subtract(attacker.getEyePosition());
-				attacker.knockback(5, d.x, d.z);
-				player.attack(entity);
-				bingbong(entity.level(), player);
-			}
-			return false;
+		if (!(entity instanceof ServerPlayer player) || !PERFECT(player)) {
+			return true;
 		}
-		return true;
+        var item = player.getMainHandItem();
+        if (!item.is(this) || !(source.getDirectEntity() instanceof LivingEntity attacker)) {
+            return false;
+        }
+        if (player.getAttackRangeWith(item).getClosesetHit(player, 0, e -> e == attacker) instanceof EntityHitResult) {
+            Vec3 d = player.getEyePosition().subtract(attacker.getEyePosition());
+            player.attack(attacker);
+            attacker.knockback(5, d.x, d.z);
+            bingbong(player.level(), player);
+        }
+        return false;
 	}
 
 	public void bingbong(Level level, Entity source) {
